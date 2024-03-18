@@ -44,10 +44,10 @@ impl Display for Game {
 }
 
 impl Game {
-    pub fn new(n_rows: usize, n_cols: usize, n_bombs: usize) -> Self {
+    pub fn new(n_rows: usize, n_cols: usize, n_bombs: usize, init_row: usize, init_col: usize) -> Self {
         let mut cells: Vec<Vec<Cell>> = vec![vec![Cell::Safe(0); n_cols]; n_rows];
 
-        make_bomb(&mut cells, n_bombs);
+        make_bomb(&mut cells, n_bombs, init_row, init_col);
 
         init_cells(&mut cells);
 
@@ -106,7 +106,7 @@ impl Game {
     }
 }
 
-fn make_bomb(cells: &mut Vec<Vec<Cell>>, mut n_bombs: usize) {
+fn make_bomb(cells: &mut Vec<Vec<Cell>>, mut n_bombs: usize, init_row: usize, init_col: usize) {
     let (n_rows, n_cols) = (cells.len(), cells[0].len());
 
     while n_bombs > 0 {
@@ -114,6 +114,10 @@ fn make_bomb(cells: &mut Vec<Vec<Cell>>, mut n_bombs: usize) {
         let col = rand::random::<usize>() % n_cols;
 
         if cells[row][col] == Cell::Bomb {
+            continue;
+        }
+
+        if row == init_row && col == init_col {
             continue;
         }
 

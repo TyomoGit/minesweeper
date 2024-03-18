@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::{cell::Cell, error::{self, Error}};
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Game {
     opened: Vec<Vec<bool>>,
     cells: Vec<Vec<Cell>>,
@@ -12,8 +13,8 @@ impl Display for Game {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "   | ")?;
         for col in 0..self.cells[0].len() {
-            let apha = (b'a' + col as u8) as char;
-            write!(f, "{} ", apha)?;
+            let alpha = (b'a' + col as u8) as char;
+            write!(f, "{} ", alpha)?;
         }
         writeln!(f)?;
 
@@ -103,6 +104,22 @@ impl Game {
         }
         
         Ok(())
+    }
+
+    pub fn see_board(&self) -> Vec<Vec<Option<Cell>>> {
+        self.cells.iter().enumerate()
+            .map(|(row, cells)| {
+                cells.iter().enumerate()
+                .map(|(col, cell)| {
+                    if self.opened[row][col] {
+                        Some(*cell)
+                    } else {
+                        None
+                    }
+                })
+                .collect()
+            })
+            .collect()
     }
 }
 

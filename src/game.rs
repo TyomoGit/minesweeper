@@ -52,7 +52,9 @@ impl Game {
 
         init_cells(&mut cells);
 
-        Self { opened: vec![vec![false; n_cols]; n_rows], cells, unopened_count: n_rows * n_cols - n_bombs }
+        let mut result = Self { opened: vec![vec![false; n_cols]; n_rows], cells, unopened_count: n_rows * n_cols - n_bombs };
+        result.open(init_row, init_col).unwrap();
+        result
     }
 
     pub fn open(&mut self, row: usize, col: usize) -> Result<(), Error> {
